@@ -1,0 +1,13 @@
+filename = 'vanillafix-1.0.0-forge-beta.jar'
+name = 'VanillaIcecreamFix'
+side = 'both'
+
+[download]
+hash = 'e6bb2e79335744c1e74e4a890d34f3684dd85439ac3b11cca9d8df0bef4de72c7cb5eead36cc397585f649467a5ddf4e5a5e95031b33360e18b20184452566f5'
+hash-format = 'sha512'
+mode = 'url'
+url = 'https://cdn.modrinth.com/data/5HUqEye3/versions/IuPjmdN1/vanillafix-1.0.0-forge-beta.jar'
+
+[update.modrinth]
+mod-id = '5HUqEye3'
+version = 'IuPjmdN1'

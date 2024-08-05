@@ -1,0 +1,13 @@
+filename = 'dixtas_armory-1.1.9-1.20.1.jar'
+name = "dixta's Armory"
+side = 'both'
+
+[download]
+hash = '470fbc2986e27e9fe5aff5126be44d0c07d72bd0f1d38f4fa0e7a48faac7d00026fdd65c062a22e8fed04b350570792f0abac72714ea0170fc7b977cbfe159ce'
+hash-format = 'sha512'
+mode = 'url'
+url = 'https://cdn.modrinth.com/data/jqUZdpXo/versions/ffIPGjQE/dixtas_armory-1.1.9-1.20.1.jar'
+
+[update.modrinth]
+mod-id = 'jqUZdpXo'
+version = 'ffIPGjQE'

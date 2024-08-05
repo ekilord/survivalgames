@@ -1,0 +1,13 @@
+filename = 'ClearSky-Universal-1.20.1-1.0.0.jar'
+name = 'ClearSky'
+side = 'both'
+
+[download]
+hash = '22ba38f8442a908e128c5083389c90c8003efcc9'
+hash-format = 'sha1'
+mode = 'metadata:curseforge'
+url = ''
+
+[update.curseforge]
+file-id = 4863932
+project-id = 936871

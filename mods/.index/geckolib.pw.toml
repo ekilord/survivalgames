@@ -1,0 +1,13 @@
+filename = 'geckolib-forge-1.20.1-4.4.7.jar'
+name = 'Geckolib'
+side = 'both'
+
+[download]
+hash = 'c7225ae97887d3f3c3095d1d0a781883496b7cd8e2312b3ef5cb872b12c215ca35b60ddfb27f09c8e115405d2bfa101d3b7b98f10fd27695bf4ee68bc3f4a121'
+hash-format = 'sha512'
+mode = 'url'
+url = 'https://cdn.modrinth.com/data/8BmcQJ2H/versions/rF4Es4hd/geckolib-forge-1.20.1-4.4.7.jar'
+
+[update.modrinth]
+mod-id = '8BmcQJ2H'
+version = 'rF4Es4hd'
