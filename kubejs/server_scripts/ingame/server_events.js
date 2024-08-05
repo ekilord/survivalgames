@@ -3,19 +3,19 @@ ServerEvents.loaded(event => {
 })
 
 ServerEvents.tick(event => {
-    const queued_players = event.server.persistentData.get('queued_players');
-    const game_progress = event.server.persistentData.get('game_progress');
+    const queuedPlayers = event.server.persistentData.get('queued_players');
+    const gameProgress = event.server.persistentData.get('game_progress');
 
-    switch (game_progress) {
+    switch (gameProgress) {
         case 'waiting':
-            if (Object.keys(queued_players).length < CONSTANTS.min_players) return;
-            if (Object.keys(queued_players).length != countVotes(queued_players)) return;
+            if (Object.keys(queuedPlayers).length < CONSTANTS.min_players) return;
+            if (Object.keys(queuedPlayers).length != countVotes(queuedPlayers)) return;
             event.server.persistentData.put('game_progress', 'starting');
             event.server.persistentData.put('countdown', CONSTANTS.countdown_length);
             break;
         case 'starting':
             if (event.server.tickCount % 20 != 0) return;
-            if (Object.keys(queued_players).length < CONSTANTS.min_players || Object.keys(queued_players).length != countVotes(queued_players)) {
+            if (Object.keys(queuedPlayers).length < CONSTANTS.min_players || Object.keys(queuedPlayers).length != countVotes(queuedPlayers)) {
                 event.server.persistentData.put('game_progress', 'waiting');
             }
             else {
@@ -42,7 +42,6 @@ ServerEvents.tick(event => {
             setupGame(event.server, event.level);
             break;
         case 'started':
-            event.server.tell('WOHOOO');
             break;
     }
 })

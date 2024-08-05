@@ -13,7 +13,7 @@ EntityEvents.death(event => {
 BlockEvents.rightClicked('minecraft:dark_oak_wall_sign', event => {
     const text = event.block.entityData.get('front_text').messages;
     if (text.get(0) == '{"text":"[Survival Games]"}' && text.get(2) == '{"text":"Join Game"}') {
-        joinLobby(event.player, event.server);
+        joinQueue(event.player, event.server);
 
         event.cancel();
     }
