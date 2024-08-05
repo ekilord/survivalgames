@@ -1,16 +1,23 @@
-let startGame = (server, level) => {
-    server.persistentData.put('game_in_progress', 'true');
+let setupGame = (server, level) => {
+    server.persistentData.put('game_progress', 'init');
     removeEveryChestHightlight();
     generateChests(level);
     teleportPlayers(level);
     initPlayers(level);
     initCountdown(level);
+    server.persistentData.put('game_progress', 'started');
 
     return 1;
 }
 
 let stopGame = (server, level) => {
-
+    const persistentData = server.persistentData;
+    let queued_players = persistentData.get('queued_players');
+    for (const key of Object.keys(queued_players)) {
+        queued_players[key] = 'false';
+    }
+    persistentData.put('game_progress', 'waiting');
+    return 1;
 }
 
 let joinLobby = (player, server) => {
@@ -26,6 +33,22 @@ let joinLobby = (player, server) => {
     return 1;
 }
 
+let playerVote = (player, server) => {
+    const name = player.getName().getString();
+    const persistentData = server.persistentData;
+    if (checkPersistentData(persistentData, 'queued_players', name)) {
+        const status = persistentData.get('queued_players');
+        if (status[name] == 'false') {
+            appendPersistentDataDict(persistentData, 'queued_players', name, 'true');
+            server.tell(Component.darkPurple(name).append(Component.darkGreen(' has voted to start the game!')));
+        }
+        else {
+            player.tell(Component.red('You have already voted!'));
+        }
+    }
+    return 1;
+}
+
 let leaveLobby = (player, server) => {
     const name = player.getName().getString();
     const persistentData = server.persistentData;
@@ -35,7 +58,22 @@ let leaveLobby = (player, server) => {
     }
     else {
         player.tell(Component.red('You have not joined the queue yet!'));
-        
+    }
+    return 1;
+}
+
+let playerUnvote = (player, server) => {
+    const name = player.getName().getString();
+    const persistentData = server.persistentData;
+    if (checkPersistentData(persistentData, 'queued_players', name)) {
+        const status = persistentData.get('queued_players');
+        if (status[name] == 'true') {
+            appendPersistentDataDict(persistentData, 'queued_players', name, 'false');
+            server.tell(Component.darkPurple(name).append(Component.darkRed(' has withdrawn their vote!')));
+        }
+        else {
+            player.tell(Component.red('You have already withdrawn your vote!'));
+        }
     }
     return 1;
 }

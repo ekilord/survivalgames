@@ -10,21 +10,32 @@ ServerEvents.commandRegistry(event => {
                 )
             )
         )
+        .then(Commands.literal(`spawn`).requires(source => source.hasPermission(2))
+            .then(Commands.literal('add').executes(c => createPlayerSpawn(c.source.player)))
+            .then(Commands.literal('remove').executes(c => removePlayerSpawn(c.source.player)))
+        )
         .then(Commands.literal(`join`).requires(source => source.hasPermission(0))
             .executes(c => joinLobby(c.source.player, c.source.server))
         )
+        .then(Commands.literal(`vote`).requires(source => source.hasPermission(0))
+            .executes(c => playerVote(c.source.player, c.source.server))
+        )
+        .then(Commands.literal(`unvote`).requires(source => source.hasPermission(0))
+            .executes(c => playerUnvote(c.source.player, c.source.server))
+        )
         .then(Commands.literal(`leave`).requires(source => source.hasPermission(0))
-        .executes(c => leaveLobby(c.source.player, c.source.server))
+            .executes(c => leaveLobby(c.source.player, c.source.server))
         )
         .then(Commands.literal(`stop`).requires(source => source.hasPermission(2))
-
+        .executes(c => stopGame(c.source.server, c.source.level))
         )
         .then(Commands.literal(`start`).requires(source => source.hasPermission(2))
             .executes(c => startGame(c.source.server, c.source.level))
         )
     )
 
-    event.register(Commands.literal("survivalgames")
+    //TODO
+    /*event.register(Commands.literal("survivalgames")
         .requires(s => s.hasPermission(2))
         .then(Commands.literal(`chests`).requires(source => source.hasPermission(2))
             .executes(c => createChestMakingTools(c.source.player))
@@ -39,5 +50,5 @@ ServerEvents.commandRegistry(event => {
 
         )
 
-    )
+    )*/
 })
