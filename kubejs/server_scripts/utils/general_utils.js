@@ -11,7 +11,7 @@ let convertToCoordinatesFromKey = (key) => {
     };
 }
 
-let checkPersistentData = (holder, dataName, key) => {
+let checkPersistentDataDict = (holder, dataName, key) => {
     let data = holder.get(dataName) || {};
     if (Object.keys(data).length > 0) {
         if (data[key] !== undefined) {

@@ -1,13 +1,4 @@
 let setupGame = (server, level) => {
-    const persistentData = server.persistentData;
-
-    persistentData.put('game_progress', 'init');
-    initPlayers(persistentData);
-    /*removeEveryChestHightlight();
-    generateChests(level);
-    teleportPlayers(level);
-    initCountdown(level);*/
-    persistentData.put('game_progress', 'started');
 
     return 1;
 }
@@ -15,49 +6,115 @@ let setupGame = (server, level) => {
 let stopGame = (server, level) => {
     const persistentData = server.persistentData;
     let queuedPlayers = persistentData.get('queued_players');
+
     for (const key of Object.keys(queuedPlayers)) {
         queuedPlayers[key] = 'false';
     }
     persistentData.remove('joined_players');
     persistentData.put('game_progress', 'waiting');
+
     return 1;
 }
 
-let leaveGame = (server, player) => {
+let leaveGame = (server, player, intentional) => {
     const persistentData = server.persistentData;
+    let text = '';
+
     if (persistentData.get('game_progress') == 'started') {
-        removePersistentDataArray(persistentData, 'joined_players', player.getName().getString());
-        const joinedPlayers =  persistentData.get('joined_players');
-        const playerCount = Object.keys(joinedPlayers).length;
-    
-        server.tell(Component.gold(name)
-            .append(Component.red(' has left the match!\n')
-                .append(Component.yellow(`${playerCount} people remain!`))));
+        const name = player.getName().getString()
+        if (intentional) {
+            text = 'left the match';
+        }
+        else {
+            text = 'been killed';
+        }
+
+        if (checkPersistentDataDict(persistentData, 'joined_players', name)) {
+            removePersistentDataArray(persistentData, 'joined_players', name);
+            const joinedPlayers = persistentData.get('joined_players');
+            const playerCount = Object.keys(joinedPlayers).length;
+
+            server.tell(Component.gold(name)
+                .append(Component.red(` has ${text}!\n`)
+                    .append(Component.yellow(`${playerCount} people remain!`))));
+        }
     }
     else {
-        player.tell(Component.red('The game has not started yet!'));
+        if (intentional) {
+            player.tell(Component.red('The game has not started yet!'));
+        }
     }
 }
 
-let joinQueue = (player, server) => {
+let joinQueue = (server, player) => {
     const name = player.getName().getString();
     const persistentData = server.persistentData;
-    if (!checkPersistentData(persistentData, 'queued_players', name)) {
-        appendPersistentDataDict(persistentData, 'queued_players', name, 'false');
+
+    if (checkAndAddToQueue(persistentData, 'queued_players', name, 'false')) {
         server.tell(Component.gold(name).append(Component.gray(' has joined the queue!')));
     }
     else {
         player.tell(Component.red('You have already joined the queue!'));
     }
+
     return 1;
 }
 
-let playerVote = (player, server) => {
+let leaveQueue = (server, player) => {
+    if (server.persistentData.get('game_progress') == 'waiting' || server.persistentData.get('game_progress') == 'starting') {
+        const name = player.getName().getString();
+        const persistentData = server.persistentData;
+
+        if (checkAndRemoveFromQueue(persistentData, 'queued_players', name)) {
+            server.tell(Component.red(name).append(Component.yellow(' has left the queue!')));
+        }
+        else {
+            player.tell(Component.red('You have not joined the queue yet!'));
+        }
+    }
+    else {
+        player.tell(Component.red("You can't leave the queue now!\n").append(Component.gray('Use /sg leave')));
+    }
+
+    return 1;
+}
+
+//TODO NEM BIZTOS DE SZEBB LENNE A KOD MEG NINCS KESZ NEZD AT 
+//ALTALANOSITASON GONDOLKOZNI KELLENE
+let checkAndAddToQueue = (holder, dictionary, key, value) => {
+    let data = holder.get(dictionary) || {};
+
+    if (Object.keys(data).length > 0) {
+        if (data[key] !== undefined) {
+            return false;
+        }
+    }
+    data[key] = value;
+    holder.put(dictionary, data);
+    return true;
+}
+
+let checkAndRemoveFromQueue = (holder, dictionary, key) => {
+    let data = holder.get(dictionary) || {};
+
+    if (Object.keys(data).length > 0) {
+        if (data[key] !== undefined) {
+            delete data[key];
+            holder.put(dataName, data);
+            return true;
+        }
+    }
+    return false;
+}
+
+let playerVote = (server, player) => {
     const name = player.getName().getString();
     const persistentData = server.persistentData;
-    if (checkPersistentData(persistentData, 'queued_players', name)) {
-        const status = persistentData.get('queued_players');
-        if (status[name] == 'false') {
+
+    if (checkPersistentDataDict(persistentData, 'queued_players', name)) {
+        const queuedPlayers = persistentData.get('queued_players');
+
+        if (queuedPlayers[name] == 'false') {
             appendPersistentDataDict(persistentData, 'queued_players', name, 'true');
             server.tell(Component.darkPurple(name).append(Component.darkGreen(' has voted to start the game!')));
         }
@@ -68,32 +125,15 @@ let playerVote = (player, server) => {
     else {
         player.tell(Component.red('You have not joined the queue yet!'));
     }
+
     return 1;
 }
 
-let leaveQueue = (player, server) => {
-    if (server.persistentData.get('game_progress') == 'waiting' || server.persistentData.get('game_progress') == 'starting') {
-        const name = player.getName().getString();
-        const persistentData = server.persistentData;
-        if (checkPersistentData(persistentData, 'queued_players', name)) {
-            removePersistentDataDict(persistentData, 'queued_players', name, 'false');
-            server.tell(Component.red(name).append(Component.yellow(' has left the queue!')));
-        }
-        else {
-            player.tell(Component.red('You have not joined the queue yet!'));
-        }
-    }
-    else {
-        player.tell(Component.red("You can't leave the queue now!\n").append(Component.gray('Use /sg leave')));
-    }
-    
-    return 1;
-}
-
-let playerUnvote = (player, server) => {
+let playerUnvote = (server, player) => {
     const name = player.getName().getString();
     const persistentData = server.persistentData;
-    if (checkPersistentData(persistentData, 'queued_players', name)) {
+
+    if (checkPersistentDataDict(persistentData, 'queued_players', name)) {
         const status = persistentData.get('queued_players');
         if (status[name] == 'true') {
             appendPersistentDataDict(persistentData, 'queued_players', name, 'false');
@@ -106,6 +146,7 @@ let playerUnvote = (player, server) => {
     else {
         player.tell(Component.red('You have not joined the queue yet!'));
     }
+
     return 1;
 }
 
@@ -127,6 +168,7 @@ let teleportPlayers = (level) => {
 let initPlayers = (persistentData) => {
     const queuedPlayers = persistentData.get('queued_players');
     let joinedPlayers = [];
+
     for (const key of Object.keys(queuedPlayers)) {
         joinedPlayers.push(key);
     }
