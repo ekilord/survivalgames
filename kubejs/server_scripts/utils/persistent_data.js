@@ -1,16 +1,3 @@
-let convertCoordinatesToKey = (key) => {
-    return `${key.x};${key.y};${key.z}`
-}
-
-let convertToCoordinatesFromKey = (key) => {
-    const numbers = key.split(';').map(Number);
-    return {
-        x: numbers[0],
-        y: numbers[1],
-        z: numbers[2]
-    };
-}
-
 let checkPersistentDataDict = (holder, dataName, key) => {
     let data = holder.get(dataName) || {};
     if (Object.keys(data).length > 0) {

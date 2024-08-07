@@ -1,0 +1,87 @@
+//  __  __         _         _        _____              _                   
+// |  \/  |       | |       | |      / ____|            | |                  
+// | \  / |  __ _ | |_  ___ | |__   | (___   _   _  ___ | |_  ___  _ __ ___  
+// | |\/| | / _` || __|/ __|| '_ \   \___ \ | | | |/ __|| __|/ _ \| '_ ` _ \ 
+// | |  | || (_| || |_| (__ | | | |  ____) || |_| |\__ \| |_|  __/| | | | | |
+// |_|  |_| \__,_| \__|\___||_| |_| |_____/  \__, ||___/ \__|\___||_| |_| |_|
+//                                            __/ |                          
+//                                           |___/                           
+
+
+let setupGame = (server, level) => {
+
+    return 1;
+}
+
+let stopGame = (server, level) => {
+    const persistentData = server.persistentData;
+    let queuedPlayers = persistentData.get(PersistentData.QUEUED_PLAYERS);
+
+    for (const key of Object.keys(queuedPlayers)) {
+        queuedPlayers[key] = 'false';
+    }
+    persistentData.remove(PersistentData.JOINED_PLAYERS);
+    persistentData.put(PersistentData.GAME_STATE, GameState.WAITING);
+
+    return 1;
+}
+
+//TODO NAGYON RONDA KONYORGOM JAVITSD KI
+let leaveGame = (server, player, intentional) => {
+    const persistentData = server.persistentData;
+    let text = '';
+
+    if (persistentData.get(PersistentData.GAME_STATE) == GameState.STARTED) {
+        const name = player.getName().getString()
+        if (intentional) {
+            text = 'left the match';
+        }
+        else {
+            text = 'been killed';
+        }
+
+        if (checkPersistentDataDict(persistentData, PersistentData.JOINED_PLAYERS, name)) {
+            removePersistentDataArray(persistentData, PersistentData.JOINED_PLAYERS, name);
+            const joinedPlayers = persistentData.get(PersistentData.JOINED_PLAYERS);
+            const playerCount = Object.keys(joinedPlayers).length;
+
+            server.tell(Component.gold(name)
+                .append(Component.red(` has ${text}!\n`)
+                    .append(Component.yellow(`${playerCount} people remain!`))));
+        }
+    }
+    else {
+        if (intentional) {
+            player.tell(Component.red('The game has not started yet!'));
+        }
+    }
+}
+
+let generateChests = (level) => {
+    const chestLocations = level.persistentData.get("chest_locations");
+
+    for (const [key, value] of Object.entries(chestLocations)) {
+        let coord = convertToCoordinatesFromKey(key);
+        let block = level.getBlock(new BlockPos(coord.x, coord.y, coord.z));
+        block.set('minecraft:chest');
+        block.setEntityData({ LootTable: `survivalgames:chests/${value.rarity}`, CustomName: `{"bold":true,"color":"${value.color}","text":"${value.rarity}"}` });
+    }
+}
+
+let teleportPlayers = (level) => {
+
+}
+
+let initPlayers = (persistentData) => {
+    const queuedPlayers = persistentData.get(PersistentData.QUEUED_PLAYERS);
+    let joinedPlayers = [];
+
+    for (const key of Object.keys(queuedPlayers)) {
+        joinedPlayers.push(key);
+    }
+    appendPersistentDataArray(persistentData, PersistentData.JOINED_PLAYERS, joinedPlayers);
+}
+
+let initCountdown = (level) => {
+
+}

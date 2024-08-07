@@ -11,7 +11,7 @@ ServerEvents.commandRegistry(event => {
             )
         )
         .then(Commands.literal(`spawn`).requires(source => source.hasPermission(2))
-            .then(Commands.literal('add').executes(c => createPlayerSpawn(c.source.player)))
+            .then(Commands.literal('add').executes(c => createPlayerSpawn(c.source.server.persistentData, c.source.player)))
             .then(Commands.literal('remove').executes(c => removePlayerSpawn(c.source.player)))
         )
         .then(Commands.literal(`queue`).requires(source => source.hasPermission(0))
