@@ -1,19 +1,20 @@
 StartupEvents.init(event => {
-    const config = JsonIO.read(CONSTANTS.config_path);
+    const config = JsonIO.read(global.Constants.config_path);
+    console.log(config)
 
     if (verifyConfigValidity(config)) {
         global.config = config;
     }
     else {
-        JsonIO.write(CONSTANTS.config_path, CONSTANTS.default_config);
+        JsonIO.write(global.Constants.config_path, global.Constants.default_config);
     }
     
 })
 
 let verifyConfigValidity = (config) => {
     if (config === null) return false;
-    for (const key in Object.keys(config)) {
-        if (!(key in CONSTANTS.default_config)) {
+    for (const key of Object.keys(config)) {
+        if (!(key in global.Constants.default_config)) {
             return false;
         }
     }

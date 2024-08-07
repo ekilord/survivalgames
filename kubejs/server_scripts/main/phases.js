@@ -9,40 +9,40 @@
 let waitingPhase = (persistentData, queuedPlayers) => {
     if (!startRequirementsMet(queuedPlayers)) return;
 
-    persistentData.put(PersistentData.GAME_STATE, GameState.STARTING);
-    persistentData.put(PersistentData.COUNTDOWN, global.config.countdown_length);
+    persistentData.put(global.PersistentData.GAME_STATE, global.GameState.STARTING);
+    persistentData.put(global.PersistentData.COUNTDOWN, global.config.countdown_length);
 }
 
 let startingPhase = (server, persistentData, queuedPlayers) => {
     if (server.tickCount % 20 != 0) return;
 
     if (startRequirementsMet(queuedPlayers)) {
-        let seconds = persistentData.get(PersistentData.COUNTDOWN);
+        let seconds = persistentData.get(global.PersistentData.COUNTDOWN);
         seconds = parseInt(seconds.getAsString());
 
         server.runCommandSilent(`title @a actionbar {"text":"${seconds.toString()}","bold":true,"color":"white"}}`)
 
         --seconds;
-        persistentData.put(PersistentData.COUNTDOWN, seconds);
+        persistentData.put(global.PersistentData.COUNTDOWN, seconds);
 
         if (seconds <= 0) {
-            persistentData.put(PersistentData.GAME_STATE, GameState.INIT);
+            persistentData.put(global.PersistentData.GAME_STATE, global.GameState.INIT);
             return;
         }
     }
     else {
-        persistentData.put(PersistentData.GAME_STATE, GameState.WAITING);
+        persistentData.put(global.PersistentData.GAME_STATE, global.GameState.WAITING);
     }
 }
 
 let initPhase = (server) => {
     const persistentData = server.persistentData;
 
-    persistentData.put(PersistentData.GAME_STATE, GameState.INIT);
+    persistentData.put(global.PersistentData.GAME_STATE, global.GameState.INIT);
     initPlayers(persistentData);
     removeEveryChestHightlight();
     generateChests(level);
     /*teleportPlayers(level);
     initCountdown(level);*/
-    persistentData.put(PersistentData.GAME_STATE, GameState.STARTED);
+    persistentData.put(global.PersistentData.GAME_STATE, global.GameState.STARTED);
 }

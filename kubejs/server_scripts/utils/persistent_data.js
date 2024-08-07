@@ -26,26 +26,21 @@ let removePersistentDataDict = (holder, dataName, key) => {
     return false;
 }
 
-let appendPersistentDataArray = (holder, dataName, element) => {
-    let data = holder.get(dataName) || [];
-    data = Array.from(data);
-    data = new Set(data);
-    data.add(element);
-    data = '["' + Array.from(data).join('", "') + '"]';
-    holder.put(dataName, data);
+let appendPersistentDataSet = (holder, dataName, key) => {
+    let data = holder.get(dataName) || '';
+    const set = new StringSet();
+    Utils.server.tell(`from: ${data}`)
+    set.from(data);
+    const result = set.add(key);
+    if (result) holder.put(dataName, set.data);
+    return result;
 }
 
-let removePersistentDataArray = (holder, dataName, element) => {
-    let data = holder.get(dataName) || [];
-    data = Array.from(data);
-    if (data.length > 0) {
-        data = new Set(data);
-        if (data.includes(element)) {
-            data.remove(element);
-            data = '["' + Array.from(data).join('", "') + '"]';
-            holder.put(dataName, data);
-            return true;
-        }
-    }
-    return false;
+let removePersistentDataSet = (holder, dataName, key) => {
+    let data = holder.get(dataName) || '';
+    const set = new StringSet();
+    set.from(data);
+    const result = set.remove(key);
+    if (result) holder.put(dataName, set.data);
+    return result;
 }

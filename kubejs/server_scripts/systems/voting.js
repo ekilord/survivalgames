@@ -12,7 +12,7 @@ let playerVote = (server, player) => {
     const name = player.getName().getString();
     const persistentData = server.persistentData;
 
-    const result = modifyVote(persistentData, PersistentData.QUEUED_PLAYERS, name, 'true');
+    const result = modifyVote(persistentData, global.PersistentData.QUEUED_PLAYERS, name, 'true');
 
     switch (result) {
         case 'success':
@@ -33,7 +33,7 @@ let playerUnvote = (server, player) => {
     const name = player.getName().getString();
     const persistentData = server.persistentData;
 
-    const result = modifyVote(persistentData, PersistentData.QUEUED_PLAYERS, name, 'false');
+    const result = modifyVote(persistentData, global.PersistentData.QUEUED_PLAYERS, name, 'false');
 
     switch (result) {
         case 'success':

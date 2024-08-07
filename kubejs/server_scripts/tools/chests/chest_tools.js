@@ -3,7 +3,7 @@ ItemEvents.rightClicked('minecraft:wooden_pickaxe', event => {
         const position = event.target.block;
         if (position != null) { } if (position != null) {
             const { level, player } = event;
-            createChest(level, player, position, Rarity.COMMON);
+            createChest(level, player, position, global.Rarity.COMMON);
         }
     }
 });
@@ -13,7 +13,7 @@ ItemEvents.rightClicked('minecraft:stone_pickaxe', event => {
         const position = event.target.block;
         if (position != null) {
             const { level, player } = event;
-            createChest(level, player, position, Rarity.UNCOMMON);
+            createChest(level, player, position, global.Rarity.UNCOMMON);
         }
     }
 });
@@ -23,7 +23,7 @@ ItemEvents.rightClicked('minecraft:iron_pickaxe', event => {
         const position = event.target.block;
         if (position != null) {
             const { level, player } = event;
-            createChest(level, player, position, Rarity.RARE);
+            createChest(level, player, position, global.Rarity.RARE);
         }
     }
 });
@@ -33,7 +33,7 @@ ItemEvents.rightClicked('minecraft:yellow_pickaxe', event => {
         const position = event.target.block;
         if (position != null) {
             const { level, player } = event;
-            createChest(level, player, position, Rarity.EPIC);
+            createChest(level, player, position, global.Rarity.EPIC);
         }
     }
 });
@@ -43,7 +43,7 @@ ItemEvents.rightClicked('minecraft:diamond_pickaxe', event => {
         const position = event.target.block;
         if (position != null) {
             const { level, player } = event;
-            createChest(level, player, position, Rarity.LEGENDARY);
+            createChest(level, player, position, global.Rarity.LEGENDARY);
         }
     }
 });
@@ -60,6 +60,7 @@ ItemEvents.rightClicked('minecraft:stick', event => {
 
 ItemEvents.rightClicked('minecraft:paper', event => {
     if (event.item.displayName.getString() == '[List Chests]') {
-        event.player.tell(event.level.persistentData.get('chest_locations'));
+        event.player.tell(event.level.persistentData.get(global.PersistentData.CHEST_LOCATIONS));
+        console.log(event.level.persistentData.get(global.PersistentData.CHEST_LOCATIONS));
     }
 });

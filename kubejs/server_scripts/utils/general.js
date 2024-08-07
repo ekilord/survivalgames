@@ -1,9 +1,9 @@
 let convertCoordinatesToKey = (key) => {
-    return `${key.x};${key.y};${key.z}`
+    return `${key.x},${key.y},${key.z}`
 }
 
 let convertToCoordinatesFromKey = (key) => {
-    const numbers = key.split(';').map(Number);
+    const numbers = key.split(',').map(Number);
     return {
         x: numbers[0],
         y: numbers[1],
@@ -25,4 +25,3 @@ let countVotes = (dict) => {
     }
     return count;
 }
-

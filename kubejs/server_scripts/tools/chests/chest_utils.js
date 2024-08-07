@@ -31,7 +31,7 @@ let createChest = (level, player, position, rarity) => {
 }
 
 let removeChest = (level, player, position) => {
-    if (removePersistentDataDict(level.persistentData, 'chest_locations', convertCoordinatesToKey(position))) {
+    if (removePersistentDataDict(level.persistentData, global.PersistentData.CHEST_LOCATIONS, convertCoordinatesToKey(position))) {
         level.getBlock(position).set('minecraft:air');
         removeChestHightlight(position);
         player.tell(
@@ -51,7 +51,7 @@ let highlightEveryChest = (level, value) => {
     removeEveryChestHightlight();
 
     if (value) {
-        const chestLocations = level.persistentData.get('chest_locations');
+        const chestLocations = level.persistentData.get(global.PersistentData.CHEST_LOCATIONS);
         for (const key of Object.keys(chestLocations)) {
             let coord = convertToCoordinatesFromKey(key);
             let position = new BlockPos(coord.x, coord.y, coord.z);

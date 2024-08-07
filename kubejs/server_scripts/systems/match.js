@@ -15,13 +15,13 @@ let setupGame = (server, level) => {
 
 let stopGame = (server, level) => {
     const persistentData = server.persistentData;
-    let queuedPlayers = persistentData.get(PersistentData.QUEUED_PLAYERS);
+    let queuedPlayers = persistentData.get(global.PersistentData.QUEUED_PLAYERS);
 
     for (const key of Object.keys(queuedPlayers)) {
         queuedPlayers[key] = 'false';
     }
-    persistentData.remove(PersistentData.JOINED_PLAYERS);
-    persistentData.put(PersistentData.GAME_STATE, GameState.WAITING);
+    persistentData.remove(global.PersistentData.JOINED_PLAYERS);
+    persistentData.put(global.PersistentData.GAME_STATE, global.GameState.WAITING);
 
     return 1;
 }
@@ -31,7 +31,7 @@ let leaveGame = (server, player, intentional) => {
     const persistentData = server.persistentData;
     let text = '';
 
-    if (persistentData.get(PersistentData.GAME_STATE) == GameState.STARTED) {
+    if (persistentData.get(PersistentData.GAME_STATE) == global.GameState.STARTED) {
         const name = player.getName().getString()
         if (intentional) {
             text = 'left the match';
@@ -40,9 +40,9 @@ let leaveGame = (server, player, intentional) => {
             text = 'been killed';
         }
 
-        if (checkPersistentDataDict(persistentData, PersistentData.JOINED_PLAYERS, name)) {
-            removePersistentDataArray(persistentData, PersistentData.JOINED_PLAYERS, name);
-            const joinedPlayers = persistentData.get(PersistentData.JOINED_PLAYERS);
+        if (checkPersistentDataDict(persistentData, global.PersistentData.JOINED_PLAYERS, name)) {
+            removePersistentDataArray(persistentData, global.PersistentData.JOINED_PLAYERS, name);
+            const joinedPlayers = persistentData.get(global.PersistentData.JOINED_PLAYERS);
             const playerCount = Object.keys(joinedPlayers).length;
 
             server.tell(Component.gold(name)
@@ -58,7 +58,7 @@ let leaveGame = (server, player, intentional) => {
 }
 
 let generateChests = (level) => {
-    const chestLocations = level.persistentData.get("chest_locations");
+    const chestLocations = level.persistentData.get(global.PersistentData.CHEST_LOCATIONS);
 
     for (const [key, value] of Object.entries(chestLocations)) {
         let coord = convertToCoordinatesFromKey(key);
@@ -73,13 +73,13 @@ let teleportPlayers = (level) => {
 }
 
 let initPlayers = (persistentData) => {
-    const queuedPlayers = persistentData.get(PersistentData.QUEUED_PLAYERS);
+    const queuedPlayers = persistentData.get(global.PersistentData.QUEUED_PLAYERS);
     let joinedPlayers = [];
 
     for (const key of Object.keys(queuedPlayers)) {
         joinedPlayers.push(key);
     }
-    appendPersistentDataArray(persistentData, PersistentData.JOINED_PLAYERS, joinedPlayers);
+    appendPersistentDataArray(persistentData, global.PersistentData.JOINED_PLAYERS, joinedPlayers);
 }
 
 let initCountdown = (level) => {

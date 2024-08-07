@@ -11,20 +11,20 @@
 ServerEvents.tick(event => {
     const { server } = event;
     const persistentData = server.persistentData;
-    const queuedPlayers = persistentData.get(PersistentData.QUEUED_PLAYERS);
-    const gameProgress = persistentData.get(PersistentData.GAME_STATE);
+    const queuedPlayers = persistentData.get(global.PersistentData.QUEUED_PLAYERS);
+    const gameProgress = persistentData.get(global.PersistentData.GAME_STATE);
 
     switch (gameProgress) {
-        case GameState.WAITING:
+        case global.GameState.WAITING:
             waitingPhase(persistentData, queuedPlayers)
             break;
-        case GameState.STARTING:
+        case global.GameState.STARTING:
             startingPhase(server, persistentData, queuedPlayers);
             break;
-        case GameState.INIT:
+        case global.GameState.INIT:
             initPhase(server);
             break;
-        case GameState.STARTED:
+        case global.GameState.STARTED:
             break;
     }
 })

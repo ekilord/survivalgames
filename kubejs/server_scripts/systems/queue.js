@@ -12,7 +12,7 @@ let joinQueue = (server, player) => {
     const name = player.getName().getString();
     const persistentData = server.persistentData;
 
-    const result = modifyQueue(persistentData, PersistentData.QUEUED_PLAYERS, name, 'false');
+    const result = modifyQueue(persistentData, global.PersistentData.QUEUED_PLAYERS, name, 'false');
 
     switch (result) {
         case 'added':
@@ -28,11 +28,11 @@ let joinQueue = (server, player) => {
 
 let leaveQueue = (server, player) => {
     const persistentData = server.persistentData;
-    if (persistentData.get(PersistentData.GAME_STATE) == GameState.WAITING || 
-        persistentData.get(PersistentData.GAME_STATE) == GameState.STARTING) {
+    if (persistentData.get(global.PersistentData.GAME_STATE) == global.GameState.WAITING || 
+        persistentData.get(global.PersistentData.GAME_STATE) == global.GameState.STARTING) {
         const name = player.getName().getString();
 
-        const result = modifyQueue(persistentData, PersistentData.QUEUED_PLAYERS, name);
+        const result = modifyQueue(persistentData, global.PersistentData.QUEUED_PLAYERS, name);
 
         switch (result) {
             case 'mismatch':
@@ -44,7 +44,7 @@ let leaveQueue = (server, player) => {
         }
     }
     else {
-        player.tell(Component.red("You can't leave the queue now!\n").append(Component.gray('Use /sg leave')));
+        player.tell(Component.red("You can't leave the queue now!\n").append(Component.gray('   -> Use /sg leave')));
     }
 
     return 1;
