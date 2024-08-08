@@ -12,11 +12,20 @@ let joinQueue = (server, player) => {
     const name = player.getName().getString();
     const persistentData = server.persistentData;
 
+    if (queuedPlayersTotal >= availableSlotsTotal) {
+        player.tell(Component.red('The queue is already full, try waiting!'));
+    }
+
     const result = modifyQueue(persistentData, global.PersistentData.QUEUED_PLAYERS, name, 'false');
 
     switch (result) {
         case 'added':
-            server.tell(Component.gold(name).append(Component.gray(' has joined the queue!')));
+            const minPlayers = global.config.min_players;
+            const queuedPlayersTotal = Object.keys(persistentData.get(global.PersistentData.QUEUED_PLAYERS)).length;
+            const availableSlotsTotal = Object.keys(persistentData.get(global.PersistentData.PLAYER_SPAWNS)).length;
+
+            server.tell(Component.gold(name).append(Component.green(' has joined the queue!').append(Component.gold(` (${availableSlotsTotal}/${queuedPlayersTotal})`))));
+            if (queuedPlayersTotal < minPlayers) server.tell(Component.gray(`${minPlayers - queuedPlayersTotal} more players are required to start the game!`));
             break;
         case 'mismatch':
             player.tell(Component.red('You have already joined the queue!'));
@@ -28,7 +37,8 @@ let joinQueue = (server, player) => {
 
 let leaveQueue = (server, player) => {
     const persistentData = server.persistentData;
-    if (persistentData.get(global.PersistentData.GAME_STATE) == global.GameState.WAITING || 
+
+    if (persistentData.get(global.PersistentData.GAME_STATE) == global.GameState.WAITING ||
         persistentData.get(global.PersistentData.GAME_STATE) == global.GameState.STARTING) {
         const name = player.getName().getString();
 
@@ -39,7 +49,10 @@ let leaveQueue = (server, player) => {
                 player.tell(Component.red('You have not joined the queue yet!'));
                 break;
             case 'removed':
-                server.tell(Component.red(name).append(Component.yellow(' has left the queue!')));
+                const queuedPlayersTotal = Object.keys(persistentData.get(global.PersistentData.QUEUED_PLAYERS)).length;
+                const availableSlotsTotal = Object.keys(persistentData.get(global.PersistentData.PLAYER_SPAWNS)).length;
+
+                server.tell(Component.red(name).append(Component.yellow(' has left the queue!').append(Component.gold(` (${availableSlotsTotal}/${queuedPlayersTotal})`))));
                 break;
         }
     }
@@ -72,6 +85,5 @@ let modifyQueue = (holder, dataName, key, value) => {
         else {
             return 'mismatch';
         }
-        
     }
 }

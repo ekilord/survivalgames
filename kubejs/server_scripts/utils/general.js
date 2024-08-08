@@ -1,4 +1,4 @@
-let convertCoordinatesToKey = (key) => {
+let convertFromCoordinatesToKey = (key) => {
     return `${key.x},${key.y},${key.z}`
 }
 

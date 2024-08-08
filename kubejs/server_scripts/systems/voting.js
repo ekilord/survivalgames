@@ -16,7 +16,10 @@ let playerVote = (server, player) => {
 
     switch (result) {
         case 'success':
-            server.tell(Component.darkPurple(name).append(Component.darkGreen(' has voted to start the game!')));
+            const votesCurrent = countVotes(persistentData.get(global.PersistentData.QUEUED_PLAYERS));
+            const votesNeeded = Object.keys(persistentData.get(global.PersistentData.QUEUED_PLAYERS)).length;
+
+            server.tell(Component.gold(name).append(Component.darkGreen(' has voted to start the game!').append(Component.gold(` (${votesNeeded}/${votesCurrent})`))));
             break;
         case 'mismatch':
             player.tell(Component.red('You have already voted!'));
@@ -37,7 +40,10 @@ let playerUnvote = (server, player) => {
 
     switch (result) {
         case 'success':
-            server.tell(Component.darkPurple(name).append(Component.darkRed(' has withdrawn their vote!')));
+            const votesTotal = countVotes(persistentData.get(global.PersistentData.QUEUED_PLAYERS));
+            const votesNeeded = Object.keys(persistentData.get(global.PersistentData.QUEUED_PLAYERS)).length;
+
+            server.tell(Component.darkRed(name).append(Component.gold(' has withdrawn their vote!').append(Component.gold(` (${votesTotal}/${votesNeeded})`))));
             break;
         case 'mismatch':
             player.tell(Component.red('You have already withdrawn your vote!'));

@@ -40,8 +40,8 @@ let leaveGame = (server, player, intentional) => {
             text = 'been killed';
         }
 
-        if (checkPersistentDataDict(persistentData, global.PersistentData.JOINED_PLAYERS, name)) {
-            removePersistentDataArray(persistentData, global.PersistentData.JOINED_PLAYERS, name);
+        if (checkPersistentData(persistentData, global.PersistentData.JOINED_PLAYERS, name)) {
+            removePersistentData(persistentData, global.PersistentData.JOINED_PLAYERS, name);
             const joinedPlayers = persistentData.get(global.PersistentData.JOINED_PLAYERS);
             const playerCount = Object.keys(joinedPlayers).length;
 
@@ -68,18 +68,21 @@ let generateChests = (level) => {
     }
 }
 
-let teleportPlayers = (level) => {
-
-}
-
 let initPlayers = (persistentData) => {
     const queuedPlayers = persistentData.get(global.PersistentData.QUEUED_PLAYERS);
-    let joinedPlayers = [];
 
     for (const key of Object.keys(queuedPlayers)) {
-        joinedPlayers.push(key);
+        addPersistentData(persistentData, global.PersistentData.JOINED_PLAYERS, key, '');
     }
-    appendPersistentDataArray(persistentData, global.PersistentData.JOINED_PLAYERS, joinedPlayers);
+    
+}
+
+let teleportPlayers = (level) => {
+    const players = persistentData.get(global.PersistentData.JOINED_PLAYERS);
+
+    for (const player of players) {
+        
+    }
 }
 
 let initCountdown = (level) => {

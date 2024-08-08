@@ -13,7 +13,7 @@ let createChestMakingTools = (player) => {
 }
 
 let createChest = (level, player, position, rarity) => {
-    appendPersistentDataDict(level.persistentData, 'chest_locations', convertCoordinatesToKey(position), rarity.rarity)
+    addPersistentData(level.persistentData, 'chest_locations', convertFromCoordinatesToKey(position), rarity.rarity)
     level.getBlock(position).set(rarity.block);
     player.tell(
         Component.green('\n\n=====================================================\n\n').append(
@@ -31,7 +31,7 @@ let createChest = (level, player, position, rarity) => {
 }
 
 let removeChest = (level, player, position) => {
-    if (removePersistentDataDict(level.persistentData, global.PersistentData.CHEST_LOCATIONS, convertCoordinatesToKey(position))) {
+    if (removePersistentData(level.persistentData, global.PersistentData.CHEST_LOCATIONS, convertFromCoordinatesToKey(position))) {
         level.getBlock(position).set('minecraft:air');
         removeChestHightlight(position);
         player.tell(
