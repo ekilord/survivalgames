@@ -41,6 +41,7 @@ let initPhase = (server) => {
     persistentData.put(global.PersistentData.GAME_STATE, global.GameState.INIT);
     initPlayers(persistentData);
     generateChests(level);
+    initSpawnPoints(level);
     teleportPlayers(level);
     persistentData.put(global.PersistentData.GAME_STATE, global.GameState.STARTED);
 }

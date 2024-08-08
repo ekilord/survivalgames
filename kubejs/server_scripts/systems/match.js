@@ -77,14 +77,26 @@ let initPlayers = (persistentData) => {
     
 }
 
-let teleportPlayers = (level) => {
-    const players = persistentData.get(global.PersistentData.JOINED_PLAYERS);
+let initSpawnPoints = () => {
 
+}
+
+let teleportPlayers = (server, level) => {
+    const persistentData = server.persistentData;
+    const players = persistentData.get(global.PersistentData.JOINED_PLAYERS);
+    const spawns = persistentData.get(global.PersistentData.PLAYER_SPAWNS);
+
+    let orderedSpawns = {};
+    orderedSpawns = Object.entries(spawns).reduce((swapped, [key, value]) => ({ ...swapped, [value]: key }), {});
+
+    let i = 0;
     for (const player of players) {
-        
+        const location = convertToCoordinatesFromKey(orderedSpawns[i]);
+        //Placeholder, valahogy meg kell szerezni a playert nev alapjan
+        player.teleportTo(level.name, location.x, location.y, location.z, 0, 0);
     }
 }
 
-let initCountdown = (level) => {
+let startCountdown = (level) => {
 
 }
