@@ -13,25 +13,30 @@ let createChestMakingTools = (player) => {
 }
 
 let createChest = (level, player, position, rarity) => {
-    addPersistentData(level.persistentData, 'chest_locations', convertFromCoordinatesToKey(position), rarity.rarity)
-    level.getBlock(position).set(rarity.block);
-    player.tell(
-        Component.green('\n\n=====================================================\n\n').append(
-            Component.yellow('Successfully created ').append(
-                Component[rarity.color](rarity.rarity).append(
-                    Component.yellow(' loot chest!\n').append(
-                        Component.gray(`Coordinates: x: ${position.x}, y: ${position.y}, z: ${position.z}`).append(
-                            Component.green('\n\n=====================================================\n\n')
+    const location = convertFromCoordinatesToKey(position);
+    
+    if (addLootChest(location, rarity.rarity)) {
+        level.getBlock(position).set(rarity.block);
+        player.tell(
+            Component.green('\n\n=====================================================\n\n').append(
+                Component.yellow('Successfully created ').append(
+                    Component[rarity.color](rarity.rarity).append(
+                        Component.yellow(' loot chest!\n').append(
+                            Component.gray(`Coordinates: x: ${position.x}, y: ${position.y}, z: ${position.z}`).append(
+                                Component.green('\n\n=====================================================\n\n')
+                            )
                         )
                     )
                 )
             )
-        )
-    );
+        );
+    }    
 }
 
 let removeChest = (level, player, position) => {
-    if (removePersistentData(level.persistentData, global.PersistentData.CHEST_LOCATIONS, convertFromCoordinatesToKey(position))) {
+    const positionKey = convertFromCoordinatesToKey(position);
+
+    if (removeLootChest(positionKey)) {
         level.getBlock(position).set('minecraft:air');
         removeChestHightlight(position);
         player.tell(
@@ -47,11 +52,12 @@ let removeChest = (level, player, position) => {
 }
 
 
-let highlightEveryChest = (level, value) => {
+let toggleChestHighlights = (highlight) => {
     removeEveryChestHightlight();
 
-    if (value) {
-        const chestLocations = level.persistentData.get(global.PersistentData.CHEST_LOCATIONS);
+    if (highlight) {
+        const chestLocations = getLootChests();
+
         for (const key of Object.keys(chestLocations)) {
             let coord = convertToCoordinatesFromKey(key);
             let position = new BlockPos(coord.x, coord.y, coord.z);

@@ -1,13 +1,14 @@
-let createPlayerSpawn = (persistentData, player) => {
+let createPlayerSpawn = (player) => {
     const position = player.block.pos;
-    const key = convertFromCoordinatesToKey(position);
-    const spawns = persistentData.get(global.PersistentData.PLAYER_SPAWNS);
-    const value = (spawns == null ? 0 : Object.keys(spawns).length);
+    const positionKey = convertFromCoordinatesToKey(position);
+    const spawnPoints = getPlayerSpawnPoints();
+    const order = (spawnPoints == null ? 0 : Object.keys(spawnPoints).length);
 
-    addPersistentData(persistentData, global.PersistentData.PLAYER_SPAWNS, key, value);
+    addPlayerSpawnPoint(positionKey, order);
+
     player.tell(
         Component.green('\n\n=====================================================\n\n').append(
-            Component.yellow(`Succesfully create spawn point ${value}!\n`).append(
+            Component.yellow(`Succesfully create spawn point ${order}!\n`).append(
                 Component.gray(`Coordinates: x: ${position.x}, y: ${position.y}, z: ${position.z}`).append(
                     Component.green('\n\n=====================================================\n\n')
                 )
@@ -18,11 +19,12 @@ let createPlayerSpawn = (persistentData, player) => {
     return 1;
 }
 
-let removePlayerSpawn = (persistentData, player) => {
+let removePlayerSpawn = (player) => {
     const position = player.block.pos;
     const key = convertFromCoordinatesToKey(position);
 
-    removePersistentData(persistentData, global.PersistentData.PLAYER_SPAWNS, key);
+    removePlayerSpawnPoint(key);
+    
     player.tell(
         Component.red('\n\n=====================================================\n\n').append(
             Component.yellow('Successfully removed spawn point!\n').append(

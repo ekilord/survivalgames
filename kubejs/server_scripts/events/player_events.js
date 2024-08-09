@@ -1,7 +1,7 @@
 PlayerEvents.loggedIn(event => {
     const { server, player } = event;
     server.runCommandSilent(`title ${player.name.getString()} times 0.15s 0.7s 0.15s`);
-    player.teleportTo('minecraft:overworld', 0, 80, 0, 0, 0);
+    teleportToSpawn(player);
 })
 
 PlayerEvents.loggedOut(event => {
@@ -12,7 +12,7 @@ PlayerEvents.loggedOut(event => {
 
 EntityEvents.death(event => {
     const { server, entity } = event;
-    if (entity.type == 'minecraft:player' && entity.level.name.getString() == 'survivalgames:arena') {
+    if (entity.type == 'minecraft:player' && entity.level.name.getString() == global.Constants.arenaLevel) {
         leaveGame(server, entity, false);
     }
 })
@@ -27,5 +27,5 @@ BlockEvents.rightClicked('minecraft:dark_oak_wall_sign', event => {
 })
 
 let teleportToSpawn = (player) => {
-
+    player.teleportTo('minecraft:overworld', 0, 80, 0, 0, 0);
 }

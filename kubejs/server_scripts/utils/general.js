@@ -11,17 +11,9 @@ let convertToCoordinatesFromKey = (key) => {
     };
 }
 
-let startRequirementsMet = (dict) => {
-    if (dict == null) return false;
-    if (Object.keys(dict).length < global.config.min_players || 
-        Object.keys(dict).length != countVotes(dict)) return false;
-    return true;
-}
-
-let countVotes = (dict) => {
-    let count = 0;
-    for (const value of Object.values(dict)) {
-        if (value == 'true') ++count;
-    }
-    return count;
-}
+let invertKeyValuePairs = (obj) => {
+    return Object.keys(obj).reduce((ret, key) => {
+      ret[obj[key]] = key;
+      return ret;
+    }, {});
+  }

@@ -8,26 +8,26 @@
 //                                             |___/                           
 
 
-let joinQueue = (server, player) => {
+let joinQueue = (player) => {
     const name = player.getName().getString();
-    const persistentData = server.persistentData;
+    const queuedPlayersTotal = Object.keys(getQueuedPlayers()).length;
+    const availableSlotsTotal = Object.keys(getPlayerSpawnPoints()).length;
 
     if (queuedPlayersTotal >= availableSlotsTotal) {
         player.tell(Component.red('The queue is already full, try waiting!'));
     }
 
-    const result = modifyQueue(persistentData, global.PersistentData.QUEUED_PLAYERS, name, 'false');
+    const result = playerQueued(name, 'false');
 
     switch (result) {
-        case 'added':
-            const minPlayers = global.config.min_players;
-            const queuedPlayersTotal = Object.keys(persistentData.get(global.PersistentData.QUEUED_PLAYERS)).length;
-            const availableSlotsTotal = Object.keys(persistentData.get(global.PersistentData.PLAYER_SPAWNS)).length;
+        case 'success':
+            const minPlayers = global.Config.min_players;
+            queuedPlayersTotal += 1;
 
-            server.tell(Component.gold(name).append(Component.green(' has joined the queue!').append(Component.gold(` (${availableSlotsTotal}/${queuedPlayersTotal})`))));
-            if (queuedPlayersTotal < minPlayers) server.tell(Component.gray(`${minPlayers - queuedPlayersTotal} more players are required to start the game!`));
+            Utils.server.tell(Component.gold(name).append(Component.green(' has joined the queue!').append(Component.gold(` (${availableSlotsTotal}/${queuedPlayersTotal})`))));
+            if (queuedPlayersTotal < minPlayers) Utils.server.tell(Component.gray(`${minPlayers - queuedPlayersTotal} more players are required to start the game!`));
             break;
-        case 'mismatch':
+        case 'error':
             player.tell(Component.red('You have already joined the queue!'));
             break;
     }
@@ -35,24 +35,24 @@ let joinQueue = (server, player) => {
     return 1;
 }
 
-let leaveQueue = (server, player) => {
-    const persistentData = server.persistentData;
+let leaveQueue = (player) => {
+    const gameState = getGameState();
 
-    if (persistentData.get(global.PersistentData.GAME_STATE) == global.GameState.WAITING ||
-        persistentData.get(global.PersistentData.GAME_STATE) == global.GameState.STARTING) {
+    if (gameState == GameState.WAITING ||
+        gameState == GameState.STARTING) {
         const name = player.getName().getString();
 
-        const result = modifyQueue(persistentData, global.PersistentData.QUEUED_PLAYERS, name);
+        const result = playerUnqueued(name);
 
         switch (result) {
-            case 'mismatch':
-                player.tell(Component.red('You have not joined the queue yet!'));
-                break;
-            case 'removed':
-                const queuedPlayersTotal = Object.keys(persistentData.get(global.PersistentData.QUEUED_PLAYERS)).length;
-                const availableSlotsTotal = Object.keys(persistentData.get(global.PersistentData.PLAYER_SPAWNS)).length;
+            case 'success':
+                const queuedPlayersTotal = Object.keys(getQueuedPlayers()).length;
+                const availableSlotsTotal = Object.keys(getPlayerSpawnPoints()).length;
 
                 server.tell(Component.red(name).append(Component.yellow(' has left the queue!').append(Component.gold(` (${availableSlotsTotal}/${queuedPlayersTotal})`))));
+                break;
+            case 'error':
+                player.tell(Component.red('You have not joined the queue yet!'));
                 break;
         }
     }
@@ -61,29 +61,4 @@ let leaveQueue = (server, player) => {
     }
 
     return 1;
-}
-
-let modifyQueue = (holder, dataName, key, value) => {
-    let data = holder.get(dataName) || {};
-
-    if (value != null) {
-        if (key in data) {
-            return 'mismatch';
-        }
-        else {
-            data[key] = value;
-            holder.put(dataName, data);
-            return 'added';
-        }
-    }
-    else {
-        if (key in data) {
-            delete data[key];
-            holder.put(dataName, data);
-            return 'removed';
-        }
-        else {
-            return 'mismatch';
-        }
-    }
 }

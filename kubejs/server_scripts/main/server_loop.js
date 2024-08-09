@@ -7,24 +7,22 @@
 //                                                             | |    
 //                                                             |_|    
 
+ServerEvents.tick(() => {
+    const gameState = getGameState();
 
-ServerEvents.tick(event => {
-    const { server } = event;
-    const persistentData = server.persistentData;
-    const queuedPlayers = persistentData.get(global.PersistentData.QUEUED_PLAYERS);
-    const gameProgress = persistentData.get(global.PersistentData.GAME_STATE);
-
-    switch (gameProgress) {
-        case global.GameState.WAITING:
-            waitingPhase(persistentData, queuedPlayers)
+    switch (gameState) {
+        case GameState.WAITING:
+            waitingPhase();
             break;
-        case global.GameState.STARTING:
-            startingPhase(server, persistentData, queuedPlayers);
+        case GameState.STARTING:
+            startingPhase();
             break;
-        case global.GameState.INIT:
-            initPhase(server);
+        case GameState.INIT:
+            initPhase();
             break;
-        case global.GameState.STARTED:
+        case GameState.STARTED:
+            matchPhase();
             break;
     }
+    
 })

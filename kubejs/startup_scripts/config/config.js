@@ -1,12 +1,18 @@
-StartupEvents.init(event => {
-    const config = JsonIO.read(global.Constants.config_path);
-    console.log(config)
+const config_path = 'survivalgames/config.json';
+
+const DefaultConfig = {
+    min_players: 2,
+    countdown_length: 30,
+}
+
+StartupEvents.init(() => {
+    const config = JsonIO.read(config_path);
 
     if (verifyConfigValidity(config)) {
-        global.config = config;
+        global.Config = config;
     }
     else {
-        JsonIO.write(global.Constants.config_path, global.Constants.default_config);
+        JsonIO.write(config_path, DefaultConfig);
     }
     
 })
@@ -14,7 +20,7 @@ StartupEvents.init(event => {
 let verifyConfigValidity = (config) => {
     if (config === null) return false;
     for (const key of Object.keys(config)) {
-        if (!(key in global.Constants.default_config)) {
+        if (!(key in DefaultConfig)) {
             return false;
         }
     }

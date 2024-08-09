@@ -8,20 +8,20 @@
 //                               |___/           |___/                           
 
 
-let playerVote = (server, player) => {
+let playerVote = (player) => {
     const name = player.getName().getString();
-    const persistentData = server.persistentData;
 
-    const result = modifyVote(persistentData, global.PersistentData.QUEUED_PLAYERS, name, 'true');
+    const result = playerVote(name);
 
     switch (result) {
         case 'success':
-            const votesCurrent = countVotes(persistentData.get(global.PersistentData.QUEUED_PLAYERS));
-            const votesNeeded = Object.keys(persistentData.get(global.PersistentData.QUEUED_PLAYERS)).length;
+            const queuedPlayers = getQueuedPlayers();
+            const votesCurrent = countVotes(queuedPlayers);
+            const votesNeeded = Object.keys(queuedPlayers).length;
 
             server.tell(Component.gold(name).append(Component.darkGreen(' has voted to start the game!').append(Component.gold(` (${votesNeeded}/${votesCurrent})`))));
             break;
-        case 'mismatch':
+        case 'has_voted':
             player.tell(Component.red('You have already voted!'));
             break;
         case 'unqueued':
@@ -32,21 +32,21 @@ let playerVote = (server, player) => {
     return 1;
 }
 
-let playerUnvote = (server, player) => {
+let playerUnvote = (player) => {
     const name = player.getName().getString();
-    const persistentData = server.persistentData;
 
-    const result = modifyVote(persistentData, global.PersistentData.QUEUED_PLAYERS, name, 'false');
+    const result = playerUnvote(name);
 
     switch (result) {
         case 'success':
-            const votesTotal = countVotes(persistentData.get(global.PersistentData.QUEUED_PLAYERS));
-            const votesNeeded = Object.keys(persistentData.get(global.PersistentData.QUEUED_PLAYERS)).length;
+            const queuedPlayers = getQueuedPlayers();
+            const votesTotal = countVotes(queuedPlayers);
+            const votesNeeded = Object.keys(queuedPlayers).length;
 
             server.tell(Component.darkRed(name).append(Component.gold(' has withdrawn their vote!').append(Component.gold(` (${votesTotal}/${votesNeeded})`))));
             break;
-        case 'mismatch':
-            player.tell(Component.red('You have already withdrawn your vote!'));
+        case 'not_voted':
+            player.tell(Component.red('You have not voted yet!'));
             break;
         case 'unqueued':
             player.tell(Component.red('You have not joined the queue yet!'));
@@ -56,19 +56,10 @@ let playerUnvote = (server, player) => {
     return 1;
 }
 
-let modifyVote = (holder, dataName, key, value) => {
-    let data = holder.get(dataName) || {};
-
-    if (Object.keys(data).length > 0) {
-        if (key in data && data[key] != value) {
-            data[key] = value;
-            holder.put(dataName, data);
-
-            return 'success';
-        }
-
-        return 'mismatch';
+let countVotes = (queuedPlayers) => {
+    let count = 0;
+    for (const value of Object.values(queuedPlayers)) {
+        if (value == 'true') ++count;
     }
-
-    return 'unqueued';
+    return count;
 }
