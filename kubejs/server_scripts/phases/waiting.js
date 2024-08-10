@@ -2,7 +2,7 @@ let waitingPhase = () => {
     const queuedPlayers = getQueuedPlayers();
     if (!startRequirementsMet(queuedPlayers)) return;
 
-    setGameState(persistentData, GAME_STATE.STARTING);
+    setGameState(GameState.STARTING);
     setCountdown(global.Config.countdown_length);
 }
 

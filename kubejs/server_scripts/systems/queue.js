@@ -8,7 +8,7 @@
 //                                             |___/                           
 
 
-let joinQueue = (player) => {
+let queue = (player) => {
     const name = player.getName().getString();
     const queuedPlayersTotal = Object.keys(getQueuedPlayers()).length;
     const availableSlotsTotal = Object.keys(getPlayerSpawnPoints()).length;
@@ -35,7 +35,7 @@ let joinQueue = (player) => {
     return 1;
 }
 
-let leaveQueue = (player) => {
+let unqueue = (player) => {
     const gameState = getGameState();
 
     if (gameState == GameState.WAITING ||

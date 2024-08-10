@@ -1,5 +1,5 @@
 let initPhase = () => {
-    setGameState(GAME_STATE.INIT);
+    setGameState(GameState.INIT);
 
     initPlayers();
     generateChests();
@@ -7,7 +7,7 @@ let initPhase = () => {
     teleportPlayers();
     startCountdown();
 
-    setGameState(GAME_STATE.STARTED);
+    setGameState(GameState.STARTED);
 }
 
 let generateChests = () => {

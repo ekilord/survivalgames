@@ -12,11 +12,11 @@ let startingPhase = () => {
         setCountdown(--seconds);
 
         if (seconds <= 0) {
-            setGameState(GAME_STATE.INIT);
+            setGameState(GameState.INIT);
             return;
         }
     }
     else {
-        setGameState(GAME_STATE.WAITING);
+        setGameState(GameState.WAITING);
     }
 }

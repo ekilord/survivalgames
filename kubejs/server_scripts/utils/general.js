@@ -13,7 +13,11 @@ let convertToCoordinatesFromKey = (key) => {
 
 let invertKeyValuePairs = (obj) => {
     return Object.keys(obj).reduce((ret, key) => {
-      ret[obj[key]] = key;
-      return ret;
+        ret[obj[key]] = key;
+        return ret;
     }, {});
-  }
+}
+
+let teleportToSpawn = (player) => {
+    player.teleportTo('minecraft:overworld', 0, 80, 0, 0, 0);
+}

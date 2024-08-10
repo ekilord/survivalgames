@@ -8,7 +8,7 @@
 //                               |___/           |___/                           
 
 
-let playerVote = (player) => {
+let vote = (player) => {
     const name = player.getName().getString();
 
     const result = playerVote(name);
@@ -32,7 +32,7 @@ let playerVote = (player) => {
     return 1;
 }
 
-let playerUnvote = (player) => {
+let unvote = (player) => {
     const name = player.getName().getString();
 
     const result = playerUnvote(name);

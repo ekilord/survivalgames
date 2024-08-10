@@ -26,19 +26,17 @@ let removePlayerFromQueue = (name) => {
     return removePersistentData(PersistentData.QUEUED_PLAYERS, name);
 }
 
-let playerQueued = (name) => {
-    if (persistentDataContains(name)) return 'error';
-    addPlayerToQueue(name);
-    return 'success';
+let playerQueue = (name) => {
+    if (addPlayerToQueue(name)) return 'success';
+    return 'error';
 }
 
-let playerUnqueued = (name) => {
-    if (!persistentDataContains(name)) return 'error';
-    removePlayerFromQueue(name);
-    return 'success';
+let playerUnqueue = (name) => {
+    if (removePlayerFromQueue(name)) return 'success';
+    return 'error';
 }
 
-let playerVoted = (name) => {
+let playerVote = (name) => {
     let queuedPlayers = getQueuedPlayers || {};
 
     if (persistentDataContains(PersistentData.QUEUED_PLAYERS, name)) {
@@ -53,7 +51,7 @@ let playerVoted = (name) => {
     else return 'unqueued';
 }
 
-let playerUnvoted = (name) => {
+let playerUnvote = (name) => {
     let queuedPlayers = getQueuedPlayers || {};
 
     if (persistentDataContains(PersistentData.QUEUED_PLAYERS, name)) {
@@ -66,6 +64,14 @@ let playerUnvoted = (name) => {
         else return 'not_voted';
     }
     else return 'unqueued';
+}
+
+let resetVotes = () => {
+    const queuedPlayers = getQueuedPlayers();
+
+    for (const key of Object.keys(queuedPlayers)) {
+        queuedPlayers[key] = 'false';
+    }
 }
 
 let getJoinedPlayers = () => {
