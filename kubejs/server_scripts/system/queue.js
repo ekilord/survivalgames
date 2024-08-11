@@ -15,6 +15,7 @@ let queue = (player) => {
 
     if (queuedPlayersTotal >= availableSlotsTotal) {
         player.tell(Component.red('The queue is already full, try waiting!'));
+        return 1;
     }
 
     if (playerQueue(name)) {

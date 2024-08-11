@@ -53,6 +53,9 @@ let removePlayerFromGame = (name, text) => {
 }
 
 let finishGame = () => {
+    const players = Utils.server.getLevel(Constants.arenaLevel).getPlayers();
+    const player = players[0];
+
     Utils.server.tell(
         Component.darkGreen('\n\n\n=====================================================\n\n').append(
             Component.gold(player.getName().getString()).append(

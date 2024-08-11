@@ -10,16 +10,17 @@
 PlayerEvents.loggedIn(event => {
     const { server, player } = event;
 
+    player.setGameMode('adventure');
     server.runCommandSilent(`title ${player.getName().getString()} times 0.15s 0.7s 0.15s`);
     teleportToSpawn(player);
 })
 
 PlayerEvents.loggedOut(event => {
     const { player } = event;
-    const name = player.getName().getString();
+    const name = player.name.getString();
 
     playerUnqueue(name);
-    playerLeaveGame(name);
+    playerLeaveGame(player);
 })
 
 EntityEvents.death(event => {
@@ -31,6 +32,8 @@ EntityEvents.death(event => {
 })
 
 EntityEvents.hurt(event => {
+    const { entity } = event;
+
     if (entity.type == 'minecraft:player') {
         const level = event.entity.getLevel().getName().getString();
 
@@ -40,7 +43,7 @@ EntityEvents.hurt(event => {
                 break;
             case 'survivalgames:arena':
                 if (isPvpAllowed) return; 
-                event.cancel();
+                else event.cancel();
         }
     }
 })

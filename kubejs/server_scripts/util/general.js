@@ -21,3 +21,8 @@ let invertKeyValuePairs = (obj) => {
 let teleportToSpawn = (player) => {
     player.teleportTo('minecraft:overworld', 0, 80, 0, 0, 0);
 }
+
+let importFile = () => {
+    Utils.server.tell(isPvpAllowed());
+    return 1;
+}

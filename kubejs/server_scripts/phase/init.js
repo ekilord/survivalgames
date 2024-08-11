@@ -68,7 +68,7 @@ let teleportPlayers = () => {
 
     let i = 0;
     for (const player of Object.keys(joinedPlayers)) {
-        const location = convertToCoordinatesFromKey(spawnPoints[i]);
+        let location = convertToCoordinatesFromKey(spawnPoints[i]);
         totalPlayers.getPlayerByName(player).teleportTo(Constants.arenaLevel, location.x + 0.5, location.y + 0.5, location.z + 0.5, 0, 0);
         ++i;
     }
