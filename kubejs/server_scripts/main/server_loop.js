@@ -12,6 +12,10 @@ ServerEvents.tick(() => {
 
     switch (gameState) {
         case GameState.WAITING:
+            /*Utils.server.customBossEvents.events.forEach((bossevent) => {
+                Utils.server.tell(`${bossevent.getValue}`)
+            })*/
+            
             waitingPhase();
             break;
         case GameState.STARTING:
@@ -24,5 +28,4 @@ ServerEvents.tick(() => {
             matchPhase();
             break;
     }
-    
 })

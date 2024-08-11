@@ -1,3 +1,10 @@
+//   _____                                                _      
+//  / ____|                                              | |     
+// | |      ___   _ __ ___   _ __ ___    __ _  _ __    __| | ___ 
+// | |     / _ \ | '_ ` _ \ | '_ ` _ \  / _` || '_ \  / _` |/ __|
+// | |____| (_) || | | | | || | | | | || (_| || | | || (_| |\__ \
+//  \_____|\___/ |_| |_| |_||_| |_| |_| \__,_||_| |_| \__,_||___/
+
 ServerEvents.commandRegistry(event => {
     const { commands: Commands, arguments: Arguments } = event
 
@@ -28,10 +35,10 @@ ServerEvents.commandRegistry(event => {
             .executes(c => unvote(c.source.player))
         )
         .then(Commands.literal(`leave`).requires(source => source.hasPermission(0))
-            .executes(c => leaveGame(c.source.player, true))
+            .executes(c => playerLeaveGame(c.source.player))
         )
         .then(Commands.literal(`stop`).requires(source => source.hasPermission(2))
-            .executes(c => stopGame(c.source.level))
+            .executes(c => forceStopGame(c.source.level))
         )
         .then(Commands.literal(`start`).requires(source => source.hasPermission(2))
             .executes(c => startGame(c.source.level))

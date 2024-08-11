@@ -1,0 +1,13 @@
+filename = 'MoreChestVariants-BiomesOPlenty-1.1.0-beta.1+1.20.2-Forge.jar'
+name = "More Chests Variants - Biomes O' Plenty"
+side = 'both'
+
+[download]
+hash = '4cc18fe59fe0c04b782dc93dbe44ac23b0dd7e14d0e3b079a716c5093a980bd5c397a8d902575d694c8e4071e1cac4d988114dce98ab112fced70329e19e1a3c'
+hash-format = 'sha512'
+mode = 'url'
+url = 'https://cdn.modrinth.com/data/oyJUwUv3/versions/ddLkvVLi/MoreChestVariants-BiomesOPlenty-1.1.0-beta.1%2B1.20.2-Forge.jar'
+
+[update.modrinth]
+mod-id = 'oyJUwUv3'
+version = 'ddLkvVLi'

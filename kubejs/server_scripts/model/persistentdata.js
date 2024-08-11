@@ -6,4 +6,6 @@ const PersistentData = {
     PLAYER_SPAWNS: 'sg_player_spawn_locations',
     //CHEST_LOCATIONS: 'sg_chest_spawn_locations',
     CHEST_LOCATIONS: 'chest_locations',
+    MATCH_TIME: 'sg_match_time',
+    PVP_ALLOWED: 'sg_pvp_allowed',
 }

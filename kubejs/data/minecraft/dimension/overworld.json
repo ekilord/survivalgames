@@ -5,7 +5,7 @@
     "settings": "survivalgames:void_noise_settings",
     "biome_source": {
       "type": "minecraft:fixed",
-      "biome": "survivalgames:void"
+      "biome": "survivalgames:lobby"
     }
   }
 }
